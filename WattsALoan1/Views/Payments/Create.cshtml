@@ -1,0 +1,117 @@
+﻿@model WattsALoan1.Models.Payment
+
+@{
+    ViewBag.Title = "Create Payment";
+}
+
+<h2 class="bold wheat common-font text-center">Create Loan Payment</h2>
+
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal common-font">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReceiptNumber, htmlAttributes: new { @class = "control-label col-md-5 wheat" })
+            <div class="col-md-7">
+                @Html.TextBox("ReceiptNumber", ViewData["ReceiptNumber"], htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ReceiptNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PaymentDate, htmlAttributes: new { @class = "control-label col-md-5 wheat" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.PaymentDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PaymentDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EmployeeId, htmlAttributes: new { @class = "control-label col-md-5 wheat" })
+            <div class="col-md-1">
+                @Html.TextBox("EmployeeId", null, htmlAttributes: new { @class = "form-control", id = "emplId" })
+                @Html.ValidationMessageFor(model => model.EmployeeId, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-6">
+                <span id="employeeIdentification" class="wheat"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LoanContractId, htmlAttributes: new { @class = "control-label col-md-5 wheat" })
+            <div class="col-md-7">
+                @Html.TextBox("LoanContractId", null, htmlAttributes: new { @class = "form-control", id = "loanId" })
+                @Html.ValidationMessageFor(model => model.LoanContractId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-5 wheat"></label>
+            <div class="col-md-7">
+                <span id="loanDetails" class="form-control"></span>
+                @Html.ValidationMessageFor(model => model.LoanContractId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PaymentAmount, htmlAttributes: new { @class = "control-label col-md-5 wheat" })
+            <div class="col-md-7">
+                @Html.TextBox("PaymentAmount", null, htmlAttributes: new { @class = "form-control", id = "pmtAmt" })
+                @Html.ValidationMessageFor(model => model.PaymentAmount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Balance, htmlAttributes: new { @class = "control-label col-md-5 wheat" })
+            <div class="col-md-7">
+                @Html.TextBox("Balance", null, htmlAttributes: new { @class = "form-control", id = "balance" })
+                @Html.ValidationMessageFor(model => model.Balance, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-6">
+                @Html.ActionLink("Loans Payments", "Index", null, htmlAttributes: new { @class = "wal-lead" })
+            </label>
+            <div class="col-md-6">
+                <input type="submit" value="Create Loan Payment" class="btn btn-warning" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#emplId").blur(function (event) {
+            $.ajax({
+                method: "GET",
+                dataType: "json",
+                url: "/api/Employees/" + $("#emplId").val(),
+                success: function (data) {
+                    $("#employeeIdentification").text(data.Identification);
+                }
+            });
+        }); // Employee id Lost Focus
+
+        $("#loanId").blur(function (event) {
+            $.ajax({
+                method: "GET",
+                dataType: "json",
+                url: "/api/LoanContracts/" + $("#loanId").val(),
+                success: function (data) {
+                    $("#loanDetails").text(data.Identification);
+                }
+            });
+        }); // Loan Contract Id Lost Focus
+    });
+</script>
